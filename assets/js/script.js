@@ -206,29 +206,33 @@ $(".card .list-group").sortable({
 
     helper: "clone",
 
-    // activate: function(event) {
+    activate: function(event) {
 
-    //     console.log("activate", this)
+        $(this).addClass("dropover");
 
-    // },
+        $(".bottom-trash").addClass("bottom-trash-drag");
 
-    // deactivate: function(event) {
+    },
 
-    //     console.log("deactivate", this)
+    deactivate: function(event) {
 
-    // },
+        $(this).removeClass("dropover");
 
-    // over: function(event) {
+        $(".bottom-trash").removeClass("bottom-trash-drag");
 
-    //     console.log("over", event.target)
+    },
 
-    // },
+    over: function(event) {
 
-    // out: function(event) {
+        $(event.target).addClass("dropover-active");
 
-    //     console.log("out", event.target)
+    },
 
-    // },
+    out: function(event) {
+
+        $(event.target).removeClass("dropover-active");
+
+    },
 
     update: function(event) {
 
@@ -296,20 +300,21 @@ $("#trash").droppable({
 
     drop: function(event, ui) {
 
-        console.log("drop");
         ui.draggable.remove();
+
+        $(".bottom-trash").removeClass("bottom-trash-active");
 
     },
 
     over: function(event, ui) {
 
-        console.log("over");
+        $(".bottom-trash").addClass("bottom-trash-active")
 
     },
 
     out: function(event, ui) {
 
-        console.log("out");
+        $(".bottom-trash").removeClass("bottom-trash-active");
 
     }
 
@@ -352,7 +357,6 @@ var auditTask = function(taskEl) {
 
     }
 
-
 };
 
 
@@ -369,7 +373,7 @@ $("#task-form-modal").on("shown.bs.modal", function() {
 });
 
 // save button in modal was clicked
-$("#task-form-modal .btn-primary").click(function() {
+$("#task-form-modal .btn-save").click(function() {
   // get form values
   var taskText = $("#modalTaskDescription").val();
   var taskDate = $("#modalDueDate").val();
@@ -403,3 +407,13 @@ $("#remove-tasks").on("click", function() {
 loadTasks();
 
 
+setInterval(function() {
+
+        $(".card .list-group-item").each(function(index, el) {
+
+            auditTask(el);
+
+        });
+
+
+  }, (1000 * 60) * 30);
